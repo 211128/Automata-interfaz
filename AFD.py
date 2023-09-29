@@ -1,19 +1,19 @@
 import tkinter as tk
 from tkinter import scrolledtext
+import subprocess
+from PIL import Image, ImageTk  
 
 states = {
     'q0': {"1": 'q1', "2": 'q1'},
     'q1': {'-':'q2'},
     'q2': {'V':'q3', 'W':'q3'},
-    'q3': {'C':'q4', 'D':'q4', 'F':'q4','G':'q4','H':'q4','I':'q4','J':'q4'
-           ,'K':'q4','L':'q4','M':'q4','N':'q4','Ñ':'q4','O':'q4','P':'q4'
-           ,'Q':'q4','R':'q4','S':'q4','T':'q4','U':'q4','V':'q4','W':'q4'
-           ,'X':'q4'},
+    'q3': {'X':'q4', 'Y':'q4', 'Z':'q4','A':'q4','B':'q4','C':'q4'},
     'q4':{'-':'q5'},
     'q5':{"0":'q6',"1":'q6',"2":'q6',"3":'q6',"4":'q6',"5":'q6',"6":'q6',"7":'q6',"8":'q6',"9":'q6',},
     'q6':{"1":'q7',"2":'q7',"3":'q7',"4":'q7',"5":'q7',"6":'q7',"7":'q7',"8":'q7',"9":'q7'},
-    'q7':{'R':'q8', 'Q':'q8', 'P':'q8', 'O':'q8', 'N':'q8', 'M':'q8', 
-    'L':'q8', 'K':'q8', 'J':'q8', 'I':'q8', 'H':'q8',},
+    'q7':{'R':'q8', 'S':'q8', 'T':'q8', 'U':'q8', 'V':'q8', 'W':'q8', 
+    'X':'q8', 'Y':'q8', 'Z':'q8', 'A':'q8', 'B':'q8', 'C':'q8', 'D':'q8', 'E':'q8', 'F':'q8'
+    , 'G':'q8', 'H':'q8'},
     'q8':{}
 
     # ...
@@ -30,7 +30,7 @@ def validar_automata(input_string, states, output_text):
                 current_state = states[current_state][char]
                 output_text.insert(tk.END, f'Pasa A: {current_state}\n\n', 'state_info')
             else:
-                error_message = f'Autómata no válido, error en el estado {current_state}'
+                error_message = f'Cadena no válida, error en el estado {current_state}'
                 output_text.insert(tk.END, error_message, 'error_message')
                 return {'success': False, 'message': error_message}
         except KeyError:
@@ -55,6 +55,10 @@ def validate_input():
     output_text.config(state=tk.DISABLED)  # Deshabilitar edición de salida
     result_label.config(text=resultado['message'])
 
+def open_image():
+    image_path = "C:/Users/zente/Desktop/Todo/Automatas/AFD/Automata.png"
+    subprocess.Popen(["start", image_path], shell=True)
+
 # Crear la ventana de la aplicación principal
 app = tk.Tk()
 app.title("Validador de Autómata")
@@ -71,11 +75,24 @@ app.geometry(f"{window_width}x{window_height}+{x}+{y}")
 # Aumentar el tamaño de fuente para etiquetas y campo de entrada
 font_size = 16
 
+# Crear un botón para ver el autómata (abrir la imagen)
+view_button = tk.Button(app, text="Ver Autómata", font=("Arial", font_size), command=open_image)
+view_button.pack(pady=10)
+
+# Crear una etiqueta para mostrar un texto de ejemplo
+example_text = """
+Ejemplos de entrada:
+1-VX-01R
+2-WC-99H
+"""
+example_label = tk.Label(app, text=example_text, font=("Arial", font_size), justify=tk.LEFT)
+example_label.pack(pady=10, padx=10)
+
 # Crear una etiqueta y campo de entrada para la entrada
 input_label = tk.Label(app, text="Entrada:", font=("Arial", font_size))
 input_label.pack(pady=10)
 input_entry = tk.Entry(app, font=("Arial", font_size))
-input_entry.pack(padx=10, pady=10, ipadx=20, ipady=10)  # Aumentar tamaño
+input_entry.pack(padx=10, pady=10, ipadx=20, ipady=10)
 
 # Crear un botón para activar la validación
 validate_button = tk.Button(app, text="Validar", font=("Arial", font_size), command=validate_input)
